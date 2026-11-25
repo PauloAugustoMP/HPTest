@@ -1,0 +1,4 @@
+# Streamlit theme. Overrides the default red accent (#FF4B4B) -- the red was
+# what tinted the chat input's focus border. Light/dark is still auto-detected.
+[theme]
+primaryColor = "#6C8EF5"

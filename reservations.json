@@ -1,0 +1,6 @@
+[
+  {"gpu_model": "NVIDIA A100", "quantity": 2, "start_offset_h": 0, "end_offset_h": 3, "user": "alice"},
+  {"gpu_model": "NVIDIA H100", "quantity": 2, "start_offset_h": 0, "end_offset_h": 24, "user": "bob"},
+  {"gpu_model": "NVIDIA L40S", "quantity": 3, "start_offset_h": 2, "end_offset_h": 6, "user": "carol"},
+  {"gpu_model": "NVIDIA RTX 4090", "quantity": 1, "start_offset_h": -1, "end_offset_h": 2, "user": "dave"}
+]

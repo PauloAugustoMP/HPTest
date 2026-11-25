@@ -1,0 +1,37 @@
+# Docker is used ONLY for the LLM. The FastAPI backend and the Streamlit UI run
+# locally via `uv` (see the README). This keeps the app easy to iterate on while
+# the model runs in a reproducible container.
+#
+# On first start the llama.cpp server downloads the GGUF from Hugging Face into
+# the `llama-models` volume (~2 GB for Qwen2.5-3B Q4_K_M), then serves an
+# OpenAI-compatible API on :8080 with tool calling enabled (`--jinja`).
+#
+# macOS note: Docker Desktop gives containers no Metal GPU, so inference here is
+# CPU-only (fine for trying it out, just not fast). To use a smaller/faster
+# model, change the `-hf` tag below (e.g. Qwen2.5-1.5B-Instruct-GGUF:q4_k_m).
+
+services:
+  llama:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    ports:
+      - "8080:8080"
+    volumes:
+      # llama.cpp's -hf downloads into the Hugging Face cache; persist it so the
+      # ~2 GB model is downloaded only once (not on every `docker compose up`).
+      - llama-models:/root/.cache/huggingface
+    command: >
+      --host 0.0.0.0
+      --port 8080
+      --jinja
+      --alias qwen2.5-3b-instruct
+      -hf Qwen/Qwen2.5-3B-Instruct-GGUF:q4_k_m
+      -c 8192
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 300s
+
+volumes:
+  llama-models:
